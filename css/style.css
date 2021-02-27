@@ -1,0 +1,83 @@
+
+:root
+{
+    --primary-btn-txt-color :#fff;
+    --primary-txt-color :#fff;
+    --primary-bg-btn-color:blue;
+    --secondary-bg-btn-color:#f00;
+    --question-card-bg-color :#ccc;
+
+}
+
+*
+{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+body
+{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.4;
+    font-size:1.1rem;
+}
+
+
+
+/******* Money treee *******/
+.question-content-container
+{
+    width:100%
+}
+
+.question-card
+{
+    padding : 16px;
+    background-color: var(--question-card-bg-color);
+    border-radius: 20px;
+    margin-bottom: 16px;
+}
+
+.question-title
+{
+    min-height: 200px;
+}
+
+.question-option
+{
+    cursor: pointer;
+    height:100px;
+    display: flex;
+    flex-direction: column;
+    align-items:center ;
+    justify-content: center;
+    overflow: hidden;
+
+}
+
+.time-container
+{
+    background-color: #ccc;
+    width:105px;
+    text-align: center;
+    border-radius:50%;
+    padding:10px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    text-align: center;
+}
+
+
+/*Welcome screen */
+#welcome-screen
+{
+    background-color:aqua;
+    height: 100vh;
+}
+
+#avatar-screen
+{
+    background-color: coral;
+    height: 100vh;
+}
