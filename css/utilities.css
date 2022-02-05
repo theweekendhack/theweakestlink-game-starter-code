@@ -53,6 +53,11 @@
     justify-self: center;
 }
 
+.grid-itemY-pos-center
+{
+    align-self: center;
+}
+
 .grid-itemX-pos-right
 {
     justify-self: right;
@@ -84,6 +89,11 @@
     background-color: var(--secondary-bg-btn-color);
     cursor: pointer;
 
+}
+
+.btn-active
+{
+    background-color: var(--secondary-bg-btn-color);
 }
 
 .hide
