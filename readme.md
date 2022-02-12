@@ -14,6 +14,8 @@ During the 90 second period, the main objective  of the game is to create a chai
 An incorrect answer breaks the chain and will cause the player to lose all the money accumulated up to that point; however, the player can say "bank" (press a bank button), prior to their question being asked. This will cause the accumulated money to be stored and will reset the “Money Tree” to zero. 
 For every question asked, the game must provide four possible answer choices to allow the player to choose the correct answer.
 
+If players answers the $500,000.00 question correct, they automatically win the game, regardless of the timer!
+
 
 The money tree is layered as follows:
  
