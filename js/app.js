@@ -1,6 +1,7 @@
 
 
 
+
 const main = (()=>{
 
        //declaration of DOM elements
@@ -12,25 +13,17 @@ const main = (()=>{
        const bankPotNode = document.querySelector(".bank-pot-container");
        const gameScreenNode =document.querySelector("#game-screen");
        const endGameScreenNode = document.querySelector("#game-over-screen");
-
+       const questionAnswerHolderNode = document.querySelector(".question-option-holder");
+     
 
         //declaration of reg variables
-       let timer=100000;
+       const END_POINT =`https://opentdb.com/api.php?amount=1&type=multiple`
+       let timer=1000;
        const level1MoneyTree = [0,1000,5000,10000,50000,75000,125000,250000,500000];
        let currentMoneyTreeLevelIndex = 0;
+       let json;
+       let bankPot = 0;
    
-
-       /*
-            DOM ELEMENTS TO REFERENCE :
-
-            1. Element that holds the timer value
-            2. Container Elements that holds the question and option values
-            3. Contaner that holds the money tree
-            4. Container that holds the bank pot value
-            5. Bank Button
-       */
-    
-
 
        //functions  (Making our functionality more modular)
 
@@ -53,29 +46,53 @@ const main = (()=>{
 
         }
 
-  
+
+    //Function that returns a quest from the API ( This is an async function) 
+        const getQuestionsFromAPI = ()=>{
+
+
+            return new Promise (async(resolve,reject)=>{
+
+
+                try
+                {
+                    const response = await fetch(END_POINT)
+
+                    const json = await response.json()     
+                        
+                    resolve(json)
+
+                }
+                catch(err)
+                {
+                    reject(err)
+                }
+
+            
+        })
+
+
+         }
+
+        const displayQuestionsAndChoicesToScreen= (json)=>
+        {
+
+
+            questionTitleNode.innerHTML =  json.results[0].question;
+
+            choicesNodes[0].innerHTML = json.results[0].correct_answer;
+            choicesNodes[1].innerHTML = json.results[0].incorrect_answers[0]
+            choicesNodes[2].innerHTML = json.results[0].incorrect_answers[1]
+            choicesNodes[3].innerHTML = json.results[0].incorrect_answers[2]
+
+        }
 
         const generateMoneyTree = ()=>
         {
     
     
             let treeValue = "";
-           /* for(let i=(level1MoneyTree.length-1); i>=0;i--)
-            {
-    
-    
-                if(currentMoneyTreeLevelIndex==i)
-                {
-                    treeValue+=`<div class="btn btn-money-tree-value btn-active">${level1MoneyTree[i]}</div>`
-                }
-                else
-                {
-                    treeValue+=`<div class="btn btn-money-tree-value">${level1MoneyTree[i]}</div>`
-                }
-              
-              
-            
-            }*/
+        
 
             for(let i=(level1MoneyTree.length-1); i>=0; i--)
             {
@@ -96,9 +113,46 @@ const main = (()=>{
     
         }
 
+        const determinIfPlayerChoiceIsCorrect = (correctAnswer, playerChoice)=>{
 
-        const displayQuestionsAndAnswer = ()=>{
+            if(correctAnswer === playerChoice)
+            {
+                return true;
+            }
 
+            else
+            {
+                return false;
+            }
+
+        }
+
+        const increaseLevel = async()=>{
+
+            currentMoneyTreeLevelIndex++;  
+            generateMoneyTree();
+            json =  await getQuestionsFromAPI(); //local variable
+            displayQuestionsAndChoicesToScreen(json);
+            
+            
+
+        }
+
+        const decreaseLevel = async()=>{
+
+            currentMoneyTreeLevelIndex=0;  
+            generateMoneyTree();
+            json =  await getQuestionsFromAPI(); //local variable
+            displayQuestionsAndChoicesToScreen(json);
+
+        }
+
+        const updateBankPot  = ()=>{
+
+                bankPot=bankPot+level1MoneyTree[currentMoneyTreeLevelIndex];
+                bankPotNode.innerHTML = `<h1>${bankPot}</h1>`
+                currentMoneyTreeLevelIndex = 0;
+                generateMoneyTree();
         }
 
         const endGame = ()=>{
@@ -109,43 +163,58 @@ const main = (()=>{
             endGameScreenNode.classList.remove("hide");
         }
 
+    
+
 
        //event listeners
        bankButtonNode.addEventListener("click",()=>{
-           alert("You pressed the bank button")
+          
+        updateBankPot();
+
+
        });
 
-       choicesNodes[0].addEventListener("click",()=>{
+ 
 
-        alert("You pressed choice one button")
+
+       //What is Event Bubbling ?????
+
+       questionAnswerHolderNode.addEventListener("click",(event)=>{
+
+            const correctAnser = json.results[0].correct_answer;
+            const playerChoice = event.target.innerText.trim();
+
+           const result= determinIfPlayerChoiceIsCorrect(correctAnser,playerChoice)
+
+           if(result === true)
+           {
+                increaseLevel()
+           }
+           else // THE player selected the wrong answer
+           {
+                 decreaseLevel()
+           }
+              
        })
-
-       choicesNodes[1].addEventListener("click",()=>{
-
-        alert("You pressed choice 2 button")
-       })
-
-
-       choicesNodes[2].addEventListener("click",()=>{
-
-        alert("You pressed choice 3 button")
-       })
-
-
-       choicesNodes[3].addEventListener("click",()=>{
-
-        alert("You pressed choice 4 button")
-       })
-
-
+       
+    
 
 
        //init (What you whant to happen AS SOON as the screen loads)
-       const init = ()=>{
+       const init = async()=>{
 
-            startTimer();
-            generateMoneyTree();
-            displayQuestionsAndAnswer();
+            try
+            {
+                startTimer();
+                generateMoneyTree();
+                json =  await getQuestionsFromAPI(); //local variable
+                displayQuestionsAndChoicesToScreen(json);
+            }
+            catch(err)
+            {
+                console.log(err);
+            }
+        
        }
 
        init();
